@@ -1,8 +1,7 @@
-FROM debian:buster
-RUN echo 'deb http://mirror.psu.ac.th/debian/ buster main contrib non-free' > /etc/apt/sources.list && \
-	echo 'deb http://mirror.kku.ac.th/debian/ buster main contrib non-free' > /etc/apt/sources.list && \
-	echo 'deb http://ftp.debianclub.org/debian/ buster main contrib non-free' > /etc/apt/sources.list && \
-	echo 'deb http://ftp.debianclub.org/debian-security/ buster/updates main contrib' >> /etc/apt/sources.list
+FROM debian:trixie
+RUN echo 'deb http://mirror.kku.ac.th/debian/ trixie main contrib non-free' > /etc/apt/sources.list && \
+	echo 'deb http://mirror.kku.ac.th/debian/ trixie-updates main contrib non-free' >> /etc/apt/sources.list && \
+	echo 'deb http://deb.debian.org/debian-security/ trixie-security main contrib non-free' >> /etc/apt/sources.list
 
 
 RUN apt update && apt upgrade -y && apt install -y \
@@ -29,10 +28,10 @@ ENV WORK_DIR="${HOME_DIR}/projects" \
 
 RUN /usr/sbin/useradd --create-home --shell /bin/bash -m ${USER} --uid=${UID}
 RUN /usr/sbin/usermod -append --groups sudo ${USER}
-RUN echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib:/usr/local/lib" >> "${HOME_DIR}/.bashrc"
+RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib:/usr/local/lib" >> "/home/${USER}/.bashrc"
 
 
-USER ${UID}:${GID}
+USER ${USER}
 WORKDIR ${WORK_DIR}
 
